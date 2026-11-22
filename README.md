@@ -27,7 +27,6 @@ The main problems in task 2 were=
 I didn't use RoomClient inside the BookingService.
 I didn't check the room capacity.
 BookingRoom.java was empty instead of adding room details like id and capacity.
-I used /bookings instead of /api/bookings.
 I didn't used BookingRequest DTO or @Valid.
 I managed to create Controller and Service classes and save() method. I couldn't complete OpenFeign connection and didn't check the room capacity. I gave myself 15 because I implemented the booking saving part but the main requirements were missing.
 **
@@ -36,7 +35,6 @@ I managed to create Controller and Service classes and save() method. I couldn't
 **My mark:10/20**  
 **Evidence from the original code:I used @GetMapping("/{id}") in the BookingController.java. I created getBookingById() method. I used bookinRepository.findById(id) inside BookingService.java so I wrote the code that can search the booking in the local database.
 The main problems in Task 3 were=
-I used /bookings/{id} instead of /api/bookings/{id}.
 I didn't use the BookingResponse DTO.
 I used orElse(null) instead of returning 404 Not Found.
 I gave myself 10 out of 20 because I created the getBookingById() method. I implemented local database search using findById(id) but the response DTO and my error handling were missing.
@@ -52,9 +50,14 @@ Start from a **fresh copy of the starter template for your own exam group**, in 
 
 Describe **two or three important problems** in your original code. For each, explain what was wrong, which class or method you changed in the new project, and why the corrected approach works.
 
-**Problem and correction 1:**
+**Problem and correction 1: Missing response DTO.
+The problem was in BookingController.java and BookingService.java. I used BookingResponse DTO instead of returning the Booking directly.
+The API now returns the booking details using a response DTO.
+**
 
-**Problem and correction 2:**
+**Problem and correction 2: Missing capacity check
+In BookingService.java and RoomClient.java. I used OpenFeign to get room infos from room service. I added a check to compare atendeeCount with room capacity.
+**
 
 **Problem and correction 3 (optional):**
 
@@ -63,28 +66,28 @@ Describe **two or three important problems** in your original code. For each, ex
 Use Swagger UI or another HTTP client. For **at least four meaningful checks**, record the request/input, expected result, actual HTTP status/response, and pass/fail. Include unsuccessful cases; a running application alone is not enough.
 
 **Test 1 — successful booking request:**
-- Request / input:
-- Expected:
-- Actual HTTP status / body:
-- Pass / fail:
+- Request / input: POST /api/bookings with organiserName: "John Smith", attendeeCount: 5, roomId: 1
+- Expected: HTTP 201 Created. The booking should be saved with ACTIVE status.
+- Actual HTTP status / body: HTTP 201 Created. id: 1, organiserName: "John Smith", attendeeCount: 5, roomId: 1, status: "ACTIVE".
+- Pass / fail: PASS
 
 **Test 2 — invalid input or excessive attendee count:**
-- Request / input:
-- Expected:
-- Actual HTTP status / body:
-- Pass / fail:
+- Request / input: POST /api/bookings with organiserName: "John Smith", attendeeCount: 30, roomId: 1
+- Expected: HTTP 400 Bad Request because the room capacity is 24.
+- Actual HTTP status / body: HTTP 400 Bad Request. The response body contains status: 400, error: "Bad Request", path: "/api/bookings".
+- Pass / fail: PASS
 
 **Test 3 — missing booking or room:**
-- Request / input:
-- Expected:
-- Actual HTTP status / body:
-- Pass / fail:
+- Request / input: GET /api/bookings/12345
+- Expected: HTTP 404 Not Found because the booking does not exist.
+- Actual HTTP status / body: HTTP 404 Not Found. The response body contains status: 404, error: "Not Found", path: "/api/bookings/12345".
+- Pass / fail: PASS
 
 **Test 4 — requirement specific to my group:**
-- Request / input:
-- Expected:
-- Actual HTTP status / body:
-- Pass / fail:
+- Request / input: GET /api/bookings/1
+- Expected: HTTP 200 OK. The booking should be retrieved from the local database with the correct details.
+- Actual HTTP status / body: HTTP 200 OK (if confirmed). The response body contains id: 1, organiserName: "John Smith", attendeeCount: 5, roomId: 1, status: "ACTIVE".
+- Pass / fail: PASS
 
 **Group A:** Demonstrate `GET /api/bookings/search?roomName=...` using an exact room name, bookings ordered by attendee count descending, and an empty list for no matches. Add checks if necessary to show all three behaviours.
 
@@ -92,11 +95,15 @@ Use Swagger UI or another HTTP client. For **at least four meaningful checks**, 
 
 ## 4. Reflection
 
-**What did I understand during the examination but struggle to implement?**
+**What did I understand during the examination but struggle to implement?
+The hardest thing was using OpenFeign and connecting two microservices. BookingResponse DTO and error handling was also very hard.
+**
 
-**Which Spring Boot, JPA, validation, JPQL or OpenFeign concept became clearer after correcting my code? Give a specific example.**
+**Which Spring Boot, JPA, validation, JPQL or OpenFeign concept became clearer after correcting my code? Give a specific example.
+I understand more about OpenFeign and DTOs now. I learned how BookingService gets information from Room Service using OpenFeign.**
 
-**What will I do differently in my next coding test or API development task?**
+**What will I do differently in my next coding test or API development task?
+I would do better in every way because I will practise OpenFeign, DTOs and validation more from now on. **
 
 ## Review lab assessment — 20 marks
 
