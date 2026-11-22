@@ -42,6 +42,7 @@ I gave myself 10 out of 20 because I created the getBookingById() method. I impl
 
 **Total self-assessed original examination mark: 48/100**
 
+
 **Checkpoint:** Commit this completed self-assessment as the **first review commit in your new repository**, before you modify or add application code. The lecturer decides the official original examination mark.
 
 ## 2. Corrections and improvements in my new project
